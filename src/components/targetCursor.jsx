@@ -58,8 +58,9 @@ const TargetCursor = () => {
       const rect = s.hoveredElem.getBoundingClientRect();
       s.target.x = rect.left + rect.width / 2 + window.scrollX;
       s.target.y = rect.top + rect.height / 2 + window.scrollY;
-      s.target.width = rect.width;
-      s.target.height = rect.height;
+      const padding = 12;
+      s.target.width = rect.width + padding;
+      s.target.height = rect.height + padding;
       s.mouseInElem.x = rect.width / 2;
       s.mouseInElem.y = rect.height / 2;
       if (cursorRef.current) cursorRef.current.classList.add('expand');
