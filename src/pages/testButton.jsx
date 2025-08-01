@@ -49,7 +49,7 @@ const TestButton = () => {
             onMouseDown={handleMouseDown}
           ></div>
           <div
-            className="target-btn w-32 h-32 border-2 border-dashed border-gray-500 flex items-center justify-center"
+            className="target-btn w-32 h-32 rounded-full border-2 border-dashed border-gray-500 flex items-center justify-center"
             onMouseDown={handleMouseDown}
           ></div>
           <div
