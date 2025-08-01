@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LassoCursor from '../components/lassoCursor';
 import TargetCursor from '../components/targetCursor';
 import TestButton from './testButton';
 
 function Home() {
   const [cursorType, setCursorType] = useState('lasso');
+
+  useEffect(() => {
+    const isMobile = window.matchMedia("(pointer: coarse)").matches;
+    if (isMobile) {
+      alert("jangan dibuka di hp bosss. di dekstop aja yaa");
+    }
+  }, []);
 
   return (
     <div>
