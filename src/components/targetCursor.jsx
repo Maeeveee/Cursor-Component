@@ -138,31 +138,7 @@ const TargetCursor = () => {
   return (
     <>
       <style jsx global>{`
-        * {
-          cursor: none !important;
-        }
-        body {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          background: #181818;
-        }
-        .target-btn {
-          margin: 20px;
-          padding: 16px 32px;
-          font-size: 1.2rem;
-          border: none;
-          border-radius: 8px;
-          background: #3498db;
-          color: #fff;
-          cursor: pointer;
-          transition: background 0.2s;
-        }
-        .target-btn:hover {
-          background: #217dbb;
-        }
+        * { cursor: none !important; }
         .custom-cursor {
           position: fixed;
           top: 0;
