@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+* {
+ cursor: none;
+}
+
+body {
+  background-color: black;
+}
