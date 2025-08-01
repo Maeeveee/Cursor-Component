@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 const lerp = (a, b, n) => a + (b - a) * n;
@@ -29,6 +28,16 @@ const TargetCursor = () => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       const s = state.current;
+
+      // Menampilkan cursor dan mengatur posisi awal berdasarkan mouse
+      if (cursorRef.current && cursorRef.current.style.display === "none") {
+        cursorRef.current.style.display = "block";
+        s.target.x = e.clientX;
+        s.target.y = e.clientY;
+        s.cursorState.x = e.clientX;
+        s.cursorState.y = e.clientY;
+      }
+
       s.mouse.x = e.clientX;
       s.mouse.y = e.clientY;
       if (!s.isHovering) {
@@ -46,6 +55,12 @@ const TargetCursor = () => {
         s.mouseInElem.y = Math.max(dotRadius, Math.min(s.mouseInElem.y, rect.height - dotRadius));
       }
     };
+
+    // Menyembunyikan cursor secara default
+    if (cursorRef.current) {
+      cursorRef.current.style.display = "none";
+    }
+
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);

@@ -28,8 +28,26 @@ export default function CustomCursor() {
     const cursor = cursorRef.current;
     const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
+    // Menyembunyikan cursor secara default
+    if (cursor) {
+      cursor.style.display = "none";
+    }
+
+    let isCursorVisible = false;
+
     function moveCursor(e) {
       const s = state.current;
+
+      // Menampilkan cursor dan mengatur posisi awal berdasarkan mouse
+      if (!isCursorVisible && cursor) {
+        cursor.style.display = "block";
+        isCursorVisible = true;
+        s.target.x = e.clientX;
+        s.target.y = e.clientY;
+        s.cursorState.x = e.clientX;
+        s.cursorState.y = e.clientY;
+      }
+
       s.mouse.x = e.clientX;
       s.mouse.y = e.clientY;
       if (!s.isHovering) {
@@ -103,7 +121,9 @@ export default function CustomCursor() {
 
     document.addEventListener("mousemove", moveCursor);
 
-    const hoverables = document.querySelectorAll(".target-btn, button, a, .pc-card, .pc-contact-btn, .select , input, textarea");
+    const hoverables = document.querySelectorAll(
+      ".target-btn, button, a, .pc-card, .pc-contact-btn, .select , input, textarea"
+    );
     hoverables.forEach((el) => {
       el.addEventListener("mouseenter", handleEnter);
       el.addEventListener("mouseleave", handleLeave);
