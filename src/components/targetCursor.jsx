@@ -97,7 +97,7 @@ const TargetCursor = () => {
     function animateCursor() {
       if (!running) return;
       const s = state.current;
-      const speed = 0.35; // lebih kecil = lebih smooth
+      const speed = 0.5;
       s.cursorState.x = lerp(s.cursorState.x, s.target.x, speed);
       s.cursorState.y = lerp(s.cursorState.y, s.target.y, speed);
       s.cursorState.width = lerp(s.cursorState.width, s.target.width, speed);
