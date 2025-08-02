@@ -28,7 +28,6 @@ export default function CustomCursor() {
     const cursor = cursorRef.current;
     const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
-    // Menyembunyikan cursor secara default
     if (cursor) {
       cursor.style.display = "none";
     }
@@ -38,7 +37,6 @@ export default function CustomCursor() {
     function moveCursor(e) {
       const s = state.current;
 
-      // Menampilkan cursor dan mengatur posisi awal berdasarkan mouse
       if (!isCursorVisible && cursor) {
         cursor.style.display = "block";
         isCursorVisible = true;

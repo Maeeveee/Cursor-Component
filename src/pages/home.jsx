@@ -13,60 +13,69 @@ function Home() {
       alert("jangan dibuka di hp bosss. di dekstop aja yaa");
     }
   }, []);
-console.log("cursorType", cursorType);
+
+  console.log("cursorType", cursorType);
+
+  const getGitHubUrl = () => {
+    const urls = {
+      'lasso': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/lassoCursor.jsx',
+      'target': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/targetCursor.jsx',
+      'negative': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/negativeCursor.jsx'
+    };
+    return urls[cursorType];
+  };
+
+  const handleViewGitHub = () => {
+    window.open(getGitHubUrl(), '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div
-      style={{
-        backgroundColor: cursorType === 'negative' ? 'white' : 'initial',
-        minHeight: '100vh',
-      }}
+      className={`min-h-screen ${cursorType === 'negative' ? 'bg-white' : ''}`}
     >
-      <div style={{ position: 'fixed', top: 10, left: 10, backgroundColor: 'black', padding: '10px', borderRadius: '8px' }}>
+      <div className="fixed top-2.5 left-2.5 bg-black p-2.5 rounded-lg z-[1000] flex items-center gap-2.5">
         <button
-          className='target-btn' 
+          className={`target-btn px-3 py-2 border-none rounded cursor-pointer transition-colors ${
+            cursorType === 'lasso' 
+              ? 'bg-white text-black' 
+              : 'bg-gray-500 text-white hover:bg-gray-400'
+          }`}
           onClick={() => setCursorType('lasso')} 
-          style={{ 
-            marginRight: 10, 
-            padding: '8px 12px', 
-            backgroundColor: cursorType === 'lasso' ? 'white' : 'gray', 
-            color: cursorType === 'lasso' ? 'black' : 'white', 
-            border: 'none', 
-            borderRadius: '4px', 
-            cursor: 'pointer' 
-          }}
         >
           Glass Cursor
         </button>
         <button 
-          className='target-btn'
+          className={`target-btn px-3 py-2 border-none rounded cursor-pointer transition-colors ${
+            cursorType === 'target' 
+              ? 'bg-white text-black' 
+              : 'bg-gray-500 text-white hover:bg-gray-400'
+          }`}
           onClick={() => setCursorType('target')} 
-          style={{ 
-            marginRight: 10, 
-            padding: '8px 12px', 
-            backgroundColor: cursorType === 'target' ? 'white' : 'gray', 
-            color: cursorType === 'target' ? 'black' : 'white', 
-            border: 'none', 
-            borderRadius: '4px', 
-            cursor: 'pointer' 
-          }}
         >
           Target Cursor
         </button>
         <button 
-          className='target-btn'
+          className={`target-btn px-3 py-2 border-none rounded cursor-pointer transition-colors ${
+            cursorType === 'negative' 
+              ? 'bg-white text-black' 
+              : 'bg-gray-500 text-white hover:bg-gray-400'
+          }`}
           onClick={() => setCursorType('negative')} 
-          style={{ 
-            padding: '8px 12px', 
-            backgroundColor: cursorType === 'negative' ? 'white' : 'gray', 
-            color: cursorType === 'negative' ? 'black' : 'white', 
-            border: 'none', 
-            borderRadius: '4px', 
-            cursor: 'pointer' 
-          }}
         >
           Negative Cursor
         </button>
       </div>
+
+      <button 
+        className="target-btn fixed bottom-5 right-5 px-4 py-3 bg-[#24292f] text-white border border-[#30363d] rounded-lg cursor-pointer text-sm font-medium flex items-center gap-2 hover:bg-[#30363d] hover:border-[#8b949e] transition-all shadow-lg z-[1000]"
+        onClick={handleViewGitHub}
+        style={{ fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif' }}
+      >
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        View Code
+      </button>
 
       {cursorType === 'lasso' && <LassoCursor />}
       {cursorType === 'target' && <TargetCursor />}

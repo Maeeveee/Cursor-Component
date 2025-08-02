@@ -29,7 +29,6 @@ const TargetCursor = () => {
     const handleMouseMove = (e) => {
       const s = state.current;
 
-      // Menampilkan cursor dan mengatur posisi awal berdasarkan mouse
       if (cursorRef.current && cursorRef.current.style.display === "none") {
         cursorRef.current.style.display = "block";
         s.target.x = e.clientX;
@@ -56,7 +55,6 @@ const TargetCursor = () => {
       }
     };
 
-    // Menyembunyikan cursor secara default
     if (cursorRef.current) {
       cursorRef.current.style.display = "none";
     }
