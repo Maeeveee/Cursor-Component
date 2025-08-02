@@ -8,6 +8,7 @@ const CrosshairCursor = () => {
   const horizontalLineRef = useRef(null);
   const state = useRef({
     isHovering: false,
+    isGlitching: false,
     mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
     cursorState: {
       x: window.innerWidth / 2,
@@ -88,15 +89,41 @@ const CrosshairCursor = () => {
     const handleEnter = (e) => {
       const s = state.current;
       s.isHovering = true;
+      s.isGlitching = true;
       s.target.size = 6;
       s.target.opacity = 1;
+
+      if (verticalLineRef.current) {
+        verticalLineRef.current.classList.add('glitch-active');
+      }
+      if (horizontalLineRef.current) {
+        horizontalLineRef.current.classList.add('glitch-active');
+      }
+
+      setTimeout(() => {
+        s.isGlitching = false;
+        if (verticalLineRef.current) {
+          verticalLineRef.current.classList.remove('glitch-active');
+        }
+        if (horizontalLineRef.current) {
+          horizontalLineRef.current.classList.remove('glitch-active');
+        }
+      }, 600);
     };
 
     const handleLeave = () => {
       const s = state.current;
       s.isHovering = false;
+      s.isGlitching = false;
       s.target.size = 4;
       s.target.opacity = 0.8;
+      
+      if (verticalLineRef.current) {
+        verticalLineRef.current.classList.remove('glitch-active');
+      }
+      if (horizontalLineRef.current) {
+        horizontalLineRef.current.classList.remove('glitch-active');
+      }
     };
 
     const hoverables = document.querySelectorAll(".target-btn, button, a, .pc-card, .pc-contact-btn, .select, input, textarea");
@@ -193,6 +220,32 @@ const CrosshairCursor = () => {
           transition: all 0.1s ease-out;
         }
         
+        .crosshair-vertical.glitch-active {
+          animation: glitchVertical 0.6s ease-out;
+        }
+        
+        .crosshair-vertical.glitch-active::before,
+        .crosshair-vertical.glitch-active::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: inherit;
+          opacity: 0.8;
+        }
+        
+        .crosshair-vertical.glitch-active::before {
+          animation: glitchVerticalClone1 0.6s ease-out;
+          z-index: -1;
+        }
+        
+        .crosshair-vertical.glitch-active::after {
+          animation: glitchVerticalClone2 0.6s ease-out;
+          z-index: -2;
+        }
+        
         .crosshair-horizontal {
           position: fixed;
           left: 0;
@@ -210,6 +263,236 @@ const CrosshairCursor = () => {
           z-index: 9998;
           transform: translateY(-50%);
           transition: all 0.1s ease-out;
+        }
+        
+        .crosshair-horizontal.glitch-active {
+          animation: glitchHorizontal 0.6s ease-out;
+        }
+        
+        .crosshair-horizontal.glitch-active::before,
+        .crosshair-horizontal.glitch-active::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: inherit;
+          opacity: 0.8;
+        }
+        
+        .crosshair-horizontal.glitch-active::before {
+          animation: glitchHorizontalClone1 0.6s ease-out;
+          z-index: -1;
+        }
+        
+        .crosshair-horizontal.glitch-active::after {
+          animation: glitchHorizontalClone2 0.6s ease-out;
+          z-index: -2;
+        }
+        
+        @keyframes glitchVertical {
+          0% { 
+            transform: translateX(-50%);
+            opacity: 1;
+            filter: blur(0px);
+          }
+          5% { 
+            transform: translateX(-50%) translateX(8px);
+            opacity: 0.3;
+            filter: blur(2px) saturate(2);
+            width: 1px;
+          }
+          10% { 
+            transform: translateX(-50%) translateX(-6px);
+            opacity: 0.7;
+            filter: blur(1px) hue-rotate(180deg);
+            width: 6px;
+          }
+          15% { 
+            transform: translateX(-50%) translateX(12px);
+            opacity: 0.2;
+            filter: blur(3px) contrast(2);
+            width: 2px;
+          }
+          25% { 
+            transform: translateX(-50%) translateX(-8px);
+            opacity: 0.8;
+            filter: blur(0.5px) hue-rotate(90deg);
+            width: 4px;
+          }
+          35% { 
+            transform: translateX(-50%) translateX(5px);
+            opacity: 0.4;
+            filter: blur(2.5px) brightness(2);
+            width: 1px;
+          }
+          45% { 
+            transform: translateX(-50%) translateX(-10px);
+            opacity: 0.6;
+            filter: blur(1.5px) hue-rotate(270deg);
+            width: 7px;
+          }
+          55% { 
+            transform: translateX(-50%) translateX(3px);
+            opacity: 0.9;
+            filter: blur(0.8px);
+            width: 2px;
+          }
+          65% { 
+            transform: translateX(-50%) translateX(-4px);
+            opacity: 0.5;
+            filter: blur(2px) saturate(0.5);
+            width: 5px;
+          }
+          75% { 
+            transform: translateX(-50%) translateX(2px);
+            opacity: 0.8;
+            filter: blur(1px);
+            width: 3px;
+          }
+          85% { 
+            transform: translateX(-50%) translateX(-1px);
+            opacity: 0.9;
+            filter: blur(0.5px);
+            width: 3px;
+          }
+          95% { 
+            transform: translateX(-50%);
+            opacity: 1;
+            filter: blur(0.2px);
+            width: 3px;
+          }
+          100% { 
+            transform: translateX(-50%);
+            opacity: 1;
+            filter: blur(0px);
+            width: 3px;
+          }
+        }
+        
+        @keyframes glitchHorizontal {
+          0% { 
+            transform: translateY(-50%);
+            opacity: 1;
+            filter: blur(0px);
+          }
+          5% { 
+            transform: translateY(-50%) translateY(8px);
+            opacity: 0.3;
+            filter: blur(2px) saturate(2);
+            height: 1px;
+          }
+          10% { 
+            transform: translateY(-50%) translateY(-6px);
+            opacity: 0.7;
+            filter: blur(1px) hue-rotate(180deg);
+            height: 6px;
+          }
+          15% { 
+            transform: translateY(-50%) translateY(12px);
+            opacity: 0.2;
+            filter: blur(3px) contrast(2);
+            height: 2px;
+          }
+          25% { 
+            transform: translateY(-50%) translateY(-8px);
+            opacity: 0.8;
+            filter: blur(0.5px) hue-rotate(90deg);
+            height: 4px;
+          }
+          35% { 
+            transform: translateY(-50%) translateY(5px);
+            opacity: 0.4;
+            filter: blur(2.5px) brightness(2);
+            height: 1px;
+          }
+          45% { 
+            transform: translateY(-50%) translateY(-10px);
+            opacity: 0.6;
+            filter: blur(1.5px) hue-rotate(270deg);
+            height: 7px;
+          }
+          55% { 
+            transform: translateY(-50%) translateY(3px);
+            opacity: 0.9;
+            filter: blur(0.8px);
+            height: 2px;
+          }
+          65% { 
+            transform: translateY(-50%) translateY(-4px);
+            opacity: 0.5;
+            filter: blur(2px) saturate(0.5);
+            height: 5px;
+          }
+          75% { 
+            transform: translateY(-50%) translateY(2px);
+            opacity: 0.8;
+            filter: blur(1px);
+            height: 3px;
+          }
+          85% { 
+            transform: translateY(-50%) translateY(-1px);
+            opacity: 0.9;
+            filter: blur(0.5px);
+            height: 3px;
+          }
+          95% { 
+            transform: translateY(-50%);
+            opacity: 1;
+            filter: blur(0.2px);
+            height: 3px;
+          }
+          100% { 
+            transform: translateY(-50%);
+            opacity: 1;
+            filter: blur(0px);
+            height: 3px;
+          }
+        }
+        
+        @keyframes glitchVerticalClone1 {
+          0% { transform: translateX(0px); opacity: 0; }
+          10% { transform: translateX(-15px); opacity: 0.7; filter: blur(1px) hue-rotate(120deg); }
+          20% { transform: translateX(10px); opacity: 0.4; filter: blur(2px) hue-rotate(240deg); }
+          30% { transform: translateX(-8px); opacity: 0.8; filter: blur(0.5px); }
+          50% { transform: translateX(5px); opacity: 0.3; filter: blur(3px); }
+          70% { transform: translateX(-3px); opacity: 0.6; filter: blur(1px); }
+          90% { transform: translateX(1px); opacity: 0.2; filter: blur(0.5px); }
+          100% { transform: translateX(0px); opacity: 0; filter: blur(0px); }
+        }
+        
+        @keyframes glitchVerticalClone2 {
+          0% { transform: translateX(0px); opacity: 0; }
+          15% { transform: translateX(20px); opacity: 0.5; filter: blur(2px) hue-rotate(60deg); }
+          25% { transform: translateX(-12px); opacity: 0.7; filter: blur(1.5px) hue-rotate(300deg); }
+          40% { transform: translateX(7px); opacity: 0.3; filter: blur(2.5px); }
+          60% { transform: translateX(-5px); opacity: 0.8; filter: blur(1px); }
+          80% { transform: translateX(2px); opacity: 0.4; filter: blur(0.8px); }
+          95% { transform: translateX(-1px); opacity: 0.1; filter: blur(0.3px); }
+          100% { transform: translateX(0px); opacity: 0; filter: blur(0px); }
+        }
+        
+        @keyframes glitchHorizontalClone1 {
+          0% { transform: translateY(0px); opacity: 0; }
+          10% { transform: translateY(-15px); opacity: 0.7; filter: blur(1px) hue-rotate(120deg); }
+          20% { transform: translateY(10px); opacity: 0.4; filter: blur(2px) hue-rotate(240deg); }
+          30% { transform: translateY(-8px); opacity: 0.8; filter: blur(0.5px); }
+          50% { transform: translateY(5px); opacity: 0.3; filter: blur(3px); }
+          70% { transform: translateY(-3px); opacity: 0.6; filter: blur(1px); }
+          90% { transform: translateY(1px); opacity: 0.2; filter: blur(0.5px); }
+          100% { transform: translateY(0px); opacity: 0; filter: blur(0px); }
+        }
+        
+        @keyframes glitchHorizontalClone2 {
+          0% { transform: translateY(0px); opacity: 0; }
+          15% { transform: translateY(20px); opacity: 0.5; filter: blur(2px) hue-rotate(60deg); }
+          25% { transform: translateY(-12px); opacity: 0.7; filter: blur(1.5px) hue-rotate(300deg); }
+          40% { transform: translateY(7px); opacity: 0.3; filter: blur(2.5px); }
+          60% { transform: translateY(-5px); opacity: 0.8; filter: blur(1px); }
+          80% { transform: translateY(2px); opacity: 0.4; filter: blur(0.8px); }
+          95% { transform: translateY(-1px); opacity: 0.1; filter: blur(0.3px); }
+          100% { transform: translateY(0px); opacity: 0; filter: blur(0px); }
         }
       `}</style>
       
