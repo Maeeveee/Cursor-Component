@@ -27,6 +27,16 @@ function Home() {
     return urls[cursorType];
   };
 
+  const getInspirationText = () => {
+    const inspirations = {
+      'lasso': 'Motion : IOS Pointer Animation',
+      'target': 'Motion : Magnetic Target',
+      'negative': 'Webflow : Abhishek Shankar Website',
+      'crosshair': 'Reactbits : Crosshair'
+    };
+    return inspirations[cursorType];
+  };
+
   const handleViewGitHub = () => {
     window.open(getGitHubUrl(), '_blank', 'noopener,noreferrer');
   };
@@ -76,6 +86,15 @@ function Home() {
         >
           Crosshair Cursor
         </button>
+      </div>
+
+      <div className="target-btn fixed bottom-5 left-5 bg-[#24292f] text-white border border-[#30363d] px-4 py-2 rounded-lg text-sm font-medium shadow-lg z-[1000] flex items-center gap-2 hover:bg-[#30363d] hover:border-[#8b949e] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        <span className="text-xs">
+          <span className="opacity-70">Inspired by:</span> <span className="font-semibold">{getInspirationText()}</span>
+        </span>
       </div>
 
       <button 
