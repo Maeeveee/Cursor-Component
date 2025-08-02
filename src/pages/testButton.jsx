@@ -6,6 +6,11 @@ const TestButton = ({ cursorType }) => {
   const secretText = "yo wassup";
   const textRef = useRef(null);
   const throttleRef = useRef(null);
+
+  const getBorderColor = () => {
+    if (cursorType === 'negative') return 'border-black';
+    return 'border-white';
+  };
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       const buttons = document.querySelectorAll(".target-btn");
@@ -110,42 +115,42 @@ const TestButton = ({ cursorType }) => {
     <div className="flex flex-row items-center justify-center min-h-screen gap-2">
       <div className="flex flex-col items-center justify-end gap-2">
         <div
-          className={`target-btn w-32 h-32 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+          className={`target-btn w-32 h-32 border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
           onMouseDown={handleMouseDown}
         ></div>
         <div
-          className={`target-btn w-32 h-66 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+          className={`target-btn w-32 h-66 border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
           onMouseDown={handleMouseDown}
         ></div>
       </div>
       <div className="flex flex-col items-center justify-center gap-2">
         <div className="flex gap-2">
           <div
-            className={`target-btn w-65 h-32 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+            className={`target-btn w-65 h-32 border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
             onMouseDown={handleMouseDown}
           ></div>
           <div
-            className={`target-btn w-33 h-32 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+            className={`target-btn w-33 h-32 border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
             onMouseDown={handleMouseDown}
           ></div>
         </div>
         <div className="grid grid-cols-3 gap-2">
           <div
-            className={`target-btn w-32 h-32 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+            className={`target-btn w-32 h-32 border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
             onMouseDown={handleMouseDown}
           ></div>
           <div
-            className={`target-btn w-32 h-32 rounded-full border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+            className={`target-btn w-32 h-32 rounded-full border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
             onMouseDown={handleMouseDown}
           ></div>
           <div
-            className={`target-btn w-32 h-32 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+            className={`target-btn w-32 h-32 border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
             onMouseDown={handleMouseDown}
           ></div>
         </div>
         <div className="flex flex-col items-center gap-2">
           <div
-            className={`target-btn w-100 h-32 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center relative overflow-hidden`}
+            className={`target-btn w-100 h-32 border-2 border-dashed ${getBorderColor()} flex items-center justify-center relative overflow-hidden`}
             onMouseDown={handleMouseDown}
             onMouseEnter={() => setHoveredElement('secret-box')}
             onMouseLeave={handleSecretBoxMouseLeave}
@@ -168,7 +173,7 @@ const TestButton = ({ cursorType }) => {
       </div>
       <div className="flex items-center justify-center">
         <div
-          className={`target-btn w-32 h-100 border-2 border-dashed ${cursorType === 'negative' ? 'border-black' : 'border-white'} flex items-center justify-center`}
+          className={`target-btn w-32 h-100 border-2 border-dashed ${getBorderColor()} flex items-center justify-center`}
           onMouseDown={handleMouseDown}
         ></div>
       </div>

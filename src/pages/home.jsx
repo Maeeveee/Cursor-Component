@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import LassoCursor from '../components/lassoCursor';
 import TargetCursor from '../components/targetCursor';
 import NegativeCursor from '../components/negativeCursor';
+import CrosshairCursor from '../components/crosshairCursor';
 import TestButton from './testButton';
 
 function Home() {
@@ -20,7 +21,8 @@ function Home() {
     const urls = {
       'lasso': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/lassoCursor.jsx',
       'target': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/targetCursor.jsx',
-      'negative': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/negativeCursor.jsx'
+      'negative': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/negativeCursor.jsx',
+      'crosshair': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/crosshairCursor.jsx'
     };
     return urls[cursorType];
   };
@@ -64,6 +66,16 @@ function Home() {
         >
           Negative Cursor
         </button>
+        <button 
+          className={`target-btn px-3 py-2 border-none rounded cursor-pointer transition-colors ${
+            cursorType === 'crosshair' 
+              ? 'bg-white text-black' 
+              : 'bg-gray-500 text-white hover:bg-gray-400'
+          }`}
+          onClick={() => setCursorType('crosshair')} 
+        >
+          Crosshair Cursor
+        </button>
       </div>
 
       <button 
@@ -80,6 +92,7 @@ function Home() {
       {cursorType === 'lasso' && <LassoCursor />}
       {cursorType === 'target' && <TargetCursor />}
       {cursorType === 'negative' && <NegativeCursor />}
+      {cursorType === 'crosshair' && <CrosshairCursor />}
 
       <TestButton cursorType={cursorType} />
     </div>
