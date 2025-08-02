@@ -4,6 +4,7 @@ import TargetCursor from '../components/targetCursor';
 import NegativeCursor from '../components/negativeCursor';
 import CrosshairCursor from '../components/crosshairCursor';
 import RibbonCursor from '../components/ribbonCursor';
+import RainCursor from '../components/rainCursor';
 import TestButton from './testButton';
 
 function Home() {
@@ -24,7 +25,8 @@ function Home() {
       'target': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/targetCursor.jsx',
       'negative': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/negativeCursor.jsx',
       'crosshair': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/crosshairCursor.jsx',
-      'ribbon': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/ribbonCursor.jsx'
+      'ribbon': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/ribbonCursor.jsx',
+      'rain': 'https://github.com/Maeeveee/Cursor-Component/blob/main/src/components/rainCursor.jsx'
     };
     return urls[cursorType];
   };
@@ -35,7 +37,8 @@ function Home() {
       'target': 'Motion : Magnetic Target',
       'negative': 'Webflow : Abhishek Shankar Website',
       'crosshair': 'React bits : Crosshair',
-      'ribbon': 'React bits : Ribbon Cursor'
+      'ribbon': 'React bits : Ribbon Cursor',
+      'rain': 'Custom : Rain Effect Simulation'
     };
     return inspirations[cursorType];
   };
@@ -99,6 +102,16 @@ function Home() {
         >
           Caterpillar Cursor
         </button>
+        <button 
+          className={`target-btn px-3 py-2 border-none rounded cursor-pointer transition-colors ${
+            cursorType === 'rain' 
+              ? 'bg-white text-black' 
+              : 'bg-gray-500 text-white hover:bg-gray-400'
+          }`}
+          onClick={() => setCursorType('rain')} 
+        >
+          Rain Cursor
+        </button>
       </div>
 
       <div className="target-btn fixed bottom-5 left-5 bg-[#24292f] text-white border border-[#30363d] px-4 py-2 rounded-lg text-sm font-medium shadow-lg z-[1000] flex items-center gap-2 hover:bg-[#30363d] hover:border-[#8b949e] transition-all">
@@ -126,6 +139,7 @@ function Home() {
       {cursorType === 'negative' && <NegativeCursor />}
       {cursorType === 'crosshair' && <CrosshairCursor />}
       {cursorType === 'ribbon' && <RibbonCursor />}
+      {cursorType === 'rain' && <RainCursor />}
 
       <TestButton cursorType={cursorType} />
     </div>
