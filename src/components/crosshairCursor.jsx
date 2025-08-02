@@ -9,16 +9,16 @@ const CrosshairCursor = () => {
   const state = useRef({
     isHovering: false,
     isGlitching: false,
-    mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+    mouse: { x: null, y: null },
     cursorState: {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
+      x: null,
+      y: null,
       size: 4,
       opacity: 0.8,
     },
     target: {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
+      x: null,
+      y: null,
       size: 4,
       opacity: 0.8,
     },
@@ -31,18 +31,18 @@ const CrosshairCursor = () => {
     const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
     if (cursor) {
-      cursor.style.display = isMobile ? "none" : "none";
+      cursor.style.display = "none";
     }
     if (verticalLine) {
-      verticalLine.style.display = isMobile ? "none" : "none";
+      verticalLine.style.display = "none";
     }
     if (horizontalLine) {
-      horizontalLine.style.display = isMobile ? "none" : "none";
+      horizontalLine.style.display = "none";
     }
 
     const handleMouseMove = (e) => {
       const s = state.current;
-      
+
       if (cursor && cursor.style.display === "none" && !isMobile) {
         cursor.style.display = "block";
         verticalLine.style.display = "block";
@@ -148,27 +148,29 @@ const CrosshairCursor = () => {
       const s = state.current;
       const speed = 0.15;
       
-      s.cursorState.x = lerp(s.cursorState.x, s.target.x, speed);
-      s.cursorState.y = lerp(s.cursorState.y, s.target.y, speed);
-      s.cursorState.size = lerp(s.cursorState.size, s.target.size, speed);
-      s.cursorState.opacity = lerp(s.cursorState.opacity, s.target.opacity, speed);
+      if (s.target.x !== null && s.target.y !== null) {
+        s.cursorState.x = lerp(s.cursorState.x || s.target.x, s.target.x, speed);
+        s.cursorState.y = lerp(s.cursorState.y || s.target.y, s.target.y, speed);
+        s.cursorState.size = lerp(s.cursorState.size, s.target.size, speed);
+        s.cursorState.opacity = lerp(s.cursorState.opacity, s.target.opacity, speed);
 
-      if (cursorRef.current) {
-        cursorRef.current.style.left = `${s.cursorState.x}px`;
-        cursorRef.current.style.top = `${s.cursorState.y}px`;
-        cursorRef.current.style.width = `${s.cursorState.size}px`;
-        cursorRef.current.style.height = `${s.cursorState.size}px`;
-        cursorRef.current.style.opacity = s.cursorState.opacity;
-      }
+        if (cursorRef.current) {
+          cursorRef.current.style.left = `${s.cursorState.x}px`;
+          cursorRef.current.style.top = `${s.cursorState.y}px`;
+          cursorRef.current.style.width = `${s.cursorState.size}px`;
+          cursorRef.current.style.height = `${s.cursorState.size}px`;
+          cursorRef.current.style.opacity = s.cursorState.opacity;
+        }
 
-      if (verticalLineRef.current) {
-        verticalLineRef.current.style.left = `${s.cursorState.x}px`;
-        verticalLineRef.current.style.opacity = s.cursorState.opacity * 0.6;
-      }
+        if (verticalLineRef.current) {
+          verticalLineRef.current.style.left = `${s.cursorState.x}px`;
+          verticalLineRef.current.style.opacity = s.cursorState.opacity * 0.6;
+        }
 
-      if (horizontalLineRef.current) {
-        horizontalLineRef.current.style.top = `${s.cursorState.y}px`;
-        horizontalLineRef.current.style.opacity = s.cursorState.opacity * 0.6;
+        if (horizontalLineRef.current) {
+          horizontalLineRef.current.style.top = `${s.cursorState.y}px`;
+          horizontalLineRef.current.style.opacity = s.cursorState.opacity * 0.6;
+        }
       }
 
       requestAnimationFrame(animateCursor);
@@ -190,7 +192,7 @@ const CrosshairCursor = () => {
           width: 4px;
           height: 4px;
           border-radius: 50%;
-          background: #ff4757;
+          background: #ffffff;
           pointer-events: none;
           z-index: 9999;
           transform: translate(-50%, -50%);
@@ -209,9 +211,9 @@ const CrosshairCursor = () => {
           background: linear-gradient(
             to bottom,
             transparent 0%,
-            rgba(255, 71, 87, 0.4) 15%,
-            rgba(255, 71, 87, 0.8) 50%,
-            rgba(255, 71, 87, 0.4) 85%,
+            rgba(255, 255, 255, 0.4) 15%,
+            rgba(255, 255, 255, 0.8) 50%,
+            rgba(255, 255, 255, 0.4) 85%,
             transparent 100%
           );
           pointer-events: none;
@@ -254,9 +256,9 @@ const CrosshairCursor = () => {
           background: linear-gradient(
             to right,
             transparent 0%,
-            rgba(255, 71, 87, 0.4) 15%,
-            rgba(255, 71, 87, 0.8) 50%,
-            rgba(255, 71, 87, 0.4) 85%,
+            rgba(255, 255, 255, 0.4) 15%,
+            rgba(255, 255, 255, 0.8) 50%,
+            rgba(255, 255, 255, 0.4) 85%,
             transparent 100%
           );
           pointer-events: none;

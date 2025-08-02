@@ -6,12 +6,17 @@ const RibbonCursor = () => {
   const trailRef = useRef([]);
   const canvasRef = useRef(null);
   const state = useRef({
-    mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+    mouse: { x: null, y: null },
     trail: []
   });
 
   useEffect(() => {
+    const canvas = canvasRef.current;
     const isMobile = window.matchMedia("(pointer: coarse)").matches;
+
+    if (canvas) {
+      canvas.style.display = "none";
+    }
 
     const handleMouseMove = (e) => {
       if (isMobile) return;
@@ -19,6 +24,10 @@ const RibbonCursor = () => {
       const s = state.current;
       s.mouse.x = e.clientX;
       s.mouse.y = e.clientY;
+
+      if (canvas && canvas.style.display === "none") {
+        canvas.style.display = "block";
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -62,12 +71,14 @@ const RibbonCursor = () => {
       
       const s = state.current;
       
-      s.trail.unshift({
-        x: s.mouse.x,
-        y: s.mouse.y,
-        timestamp: Date.now(),
-        lifetime: 2000
-      });
+      if (s.mouse.x !== null && s.mouse.y !== null) {
+        s.trail.unshift({
+          x: s.mouse.x,
+          y: s.mouse.y,
+          timestamp: Date.now(),
+          lifetime: 2000
+        });
+      }
 
       s.trail = s.trail.filter((point, index) => {
         const age = Date.now() - point.timestamp;
@@ -114,23 +125,26 @@ const RibbonCursor = () => {
       
       if (trail.length < 2) return;
       
-      ctx.beginPath();
-      ctx.moveTo(trail[0].x, trail[0].y);
+      const validTrail = trail.filter(point => point.x !== null && point.y !== null);
+      if (validTrail.length < 2) return;
       
-      for (let i = 1; i < trail.length - 1; i++) {
-        const current = trail[i];
-        const next = trail[i + 1];
+      ctx.beginPath();
+      ctx.moveTo(validTrail[0].x, validTrail[0].y);
+      
+      for (let i = 1; i < validTrail.length - 1; i++) {
+        const current = validTrail[i];
+        const next = validTrail[i + 1];
         const controlX = (current.x + next.x) / 2;
         const controlY = (current.y + next.y) / 2;
         ctx.quadraticCurveTo(current.x, current.y, controlX, controlY);
       }
       
-      for (let i = 0; i < trail.length - 1; i++) {
-        const current = trail[i];
-        const next = trail[i + 1];
+      for (let i = 0; i < validTrail.length - 1; i++) {
+        const current = validTrail[i];
+        const next = validTrail[i + 1];
         
         const age = (Date.now() - current.timestamp) / current.lifetime;
-        const indexAge = i / trail.length;
+        const indexAge = i / validTrail.length;
         const combinedAge = Math.min(age, indexAge);
         
         const opacity = Math.max(0.2, 1 - Math.pow(combinedAge, 0.7) * 0.6);
@@ -147,8 +161,8 @@ const RibbonCursor = () => {
         
         ctx.beginPath();
         ctx.moveTo(current.x, current.y);
-        if (i < trail.length - 2) {
-          const nextNext = trail[i + 2];
+        if (i < validTrail.length - 2) {
+          const nextNext = validTrail[i + 2];
           const controlX = (next.x + nextNext.x) / 2;
           const controlY = (next.y + nextNext.y) / 2;
           ctx.quadraticCurveTo(next.x, next.y, controlX, controlY);
