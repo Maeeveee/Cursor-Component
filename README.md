@@ -105,34 +105,6 @@ function App() {
 }
 ```
 
-4. **Add interactive elements** with the `target-btn` class:
-```jsx
-import { useState } from 'react';
-import LassoCursor from './components/lassoCursor';
-import TargetCursor from './components/targetCursor';
-import NegativeCursor from './components/negativeCursor';
-
-function App() {
-  const [cursorType, setCursorType] = useState('lasso');
-
-  return (
-    <div>
-      {/* Cursor selection buttons */}
-      <button onClick={() => setCursorType('lasso')}>Glass Cursor</button>
-      <button onClick={() => setCursorType('target')}>Target Cursor</button>
-      <button onClick={() => setCursorType('negative')}>Negative Cursor</button>
-
-      {/* Render active cursor */}
-      {cursorType === 'lasso' && <LassoCursor />}
-      {cursorType === 'target' && <TargetCursor />}
-      {cursorType === 'negative' && <NegativeCursor />}
-
-      {/* Your content here */}
-    </div>
-  );
-}
-```
-
 3. **Add interactive elements** with the `target-btn` class:
 ```jsx
 <div className="target-btn">Hover me!</div>
