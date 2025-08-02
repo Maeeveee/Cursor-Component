@@ -26,16 +26,26 @@ const TargetCursor = () => {
   });
 
   useEffect(() => {
+    const cursor = cursorRef.current;
+    const dot = dotRef.current;
+    const isMobile = window.matchMedia("(pointer: coarse)").matches;
+
+    if (cursor) {
+      cursor.style.display = isMobile ? "none" : "none";
+    }
+
     const handleMouseMove = (e) => {
       const s = state.current;
 
-      if (cursorRef.current && cursorRef.current.style.display === "none") {
-        cursorRef.current.style.display = "block";
+      if (cursor && cursor.style.display === "none" && !isMobile) {
+        cursor.style.display = "block";
         s.target.x = e.clientX;
         s.target.y = e.clientY;
         s.cursorState.x = e.clientX;
         s.cursorState.y = e.clientY;
       }
+
+      if (isMobile) return;
 
       s.mouse.x = e.clientX;
       s.mouse.y = e.clientY;
@@ -59,8 +69,25 @@ const TargetCursor = () => {
       cursorRef.current.style.display = "none";
     }
 
+    const handleMobileHide = () => {
+      if (isMobile && cursorRef.current) {
+        cursorRef.current.style.display = "none";
+      }
+    };
+
+    if (isMobile) {
+      document.addEventListener("touchstart", handleMobileHide);
+      document.addEventListener("click", handleMobileHide);
+    }
+
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (isMobile) {
+        document.removeEventListener("touchstart", handleMobileHide);
+        document.removeEventListener("click", handleMobileHide);
+      }
+    };
   }, []);
 
   useEffect(() => {
