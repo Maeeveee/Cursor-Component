@@ -3,7 +3,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 const TestButton = ({ cursorType }) => {
   const [hoveredElement, setHoveredElement] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
-  const secretText = "u find me already";
+  const secretText = "yo wassup";
   const textRef = useRef(null);
   const throttleRef = useRef(null);
   useEffect(() => {
