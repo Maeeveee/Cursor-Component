@@ -32,7 +32,7 @@ function Home() {
       'lasso': 'Motion : IOS Pointer Animation',
       'target': 'Motion : Magnetic Target',
       'negative': 'Webflow : Abhishek Shankar Website',
-      'crosshair': 'Reactbits : Crosshair'
+      'crosshair': 'React bits : Crosshair'
     };
     return inspirations[cursorType];
   };
