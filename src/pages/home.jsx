@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import LassoCursor from '../components/lassoCursor';
 import TargetCursor from '../components/targetCursor';
+import NegativeCursor from '../components/negativeCursor';
 import TestButton from './testButton';
 
 function Home() {
@@ -12,9 +13,14 @@ function Home() {
       alert("jangan dibuka di hp bosss. di dekstop aja yaa");
     }
   }, []);
-
+console.log("cursorType", cursorType);
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: cursorType === 'negative' ? 'white' : 'initial',
+        minHeight: '100vh',
+      }}
+    >
       <div style={{ position: 'fixed', top: 10, left: 10, backgroundColor: 'black', padding: '10px', borderRadius: '8px' }}>
         <button
           className='target-btn' 
@@ -35,6 +41,7 @@ function Home() {
           className='target-btn'
           onClick={() => setCursorType('target')} 
           style={{ 
+            marginRight: 10, 
             padding: '8px 12px', 
             backgroundColor: cursorType === 'target' ? 'white' : 'gray', 
             color: cursorType === 'target' ? 'black' : 'white', 
@@ -45,12 +52,27 @@ function Home() {
         >
           Target Cursor
         </button>
+        <button 
+          className='target-btn'
+          onClick={() => setCursorType('negative')} 
+          style={{ 
+            padding: '8px 12px', 
+            backgroundColor: cursorType === 'negative' ? 'white' : 'gray', 
+            color: cursorType === 'negative' ? 'black' : 'white', 
+            border: 'none', 
+            borderRadius: '4px', 
+            cursor: 'pointer' 
+          }}
+        >
+          Negative Cursor
+        </button>
       </div>
 
       {cursorType === 'lasso' && <LassoCursor />}
       {cursorType === 'target' && <TargetCursor />}
+      {cursorType === 'negative' && <NegativeCursor />}
 
-      <TestButton />
+      <TestButton cursorType={cursorType} />
     </div>
   );
 }
