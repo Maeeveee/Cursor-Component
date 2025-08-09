@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import CustomMobileAlert from '../components/CustomMobileAlert';
 import LassoCursor from '../components/lassoCursor';
 import TargetCursor from '../components/targetCursor';
 import NegativeCursor from '../components/negativeCursor';
@@ -9,11 +10,12 @@ import TestButton from './testButton';
 
 function Home() {
   const [cursorType, setCursorType] = useState('lasso');
+  const [showMobileAlert, setShowMobileAlert] = useState(false);
 
   useEffect(() => {
     const isMobile = window.matchMedia("(pointer: coarse)").matches;
     if (isMobile) {
-      alert("jangan dibuka di hp bosss. di dekstop aja yaa");
+      setShowMobileAlert(true);
     }
   }, []);
 
@@ -48,9 +50,13 @@ function Home() {
   };
 
   return (
-    <div
-      className={`min-h-screen ${cursorType === 'negative' ? 'bg-white' : ''}`}
-    >
+    <>
+      {showMobileAlert && (
+        <CustomMobileAlert message="bahaya jangan dibuka di hp bosss. di dekstop aja yaa" />
+      )}
+      <div
+        className={`min-h-screen ${cursorType === 'negative' ? 'bg-white' : ''}`}
+      >
       <div className="fixed top-2.5 left-2.5 bg-black p-2.5 rounded-lg z-[1000] flex items-center gap-2.5">
         <button
           className={`target-btn px-3 py-2 border-none rounded cursor-pointer transition-colors ${
@@ -141,8 +147,9 @@ function Home() {
       {cursorType === 'ribbon' && <RibbonCursor />}
       {cursorType === 'rain' && <RainCursor />}
 
-      <TestButton cursorType={cursorType} />
-    </div>
+        <TestButton cursorType={cursorType} />
+      </div>
+    </>
   );
 }
 
