@@ -9,6 +9,8 @@ const CrosshairCursor = () => {
   const state = useRef({
     isHovering: false,
     isGlitching: false,
+    isFiring: false,
+    fireAnim: 0, // 0 = normal, 1 = full fire
     mouse: { x: null, y: null },
     cursorState: {
       x: null,
@@ -23,6 +25,26 @@ const CrosshairCursor = () => {
       opacity: 0.8,
     },
   });
+  useEffect(() => {
+    const handleMouseDown = () => {
+      const s = state.current;
+      s.isFiring = true;
+      s.fireAnim = 1;
+      setTimeout(() => {
+        s.isFiring = false;
+      }, 150);
+    };
+    const handleMouseUp = () => {
+      const s = state.current;
+      s.isFiring = false;
+    };
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
 
   useEffect(() => {
     const cursor = cursorRef.current;
@@ -147,7 +169,8 @@ const CrosshairCursor = () => {
       if (!running) return;
       const s = state.current;
       const speed = 0.15;
-      
+      // Animate fireAnim (0 = normal, 1 = firing)
+      s.fireAnim = lerp(s.fireAnim, s.isFiring ? 1 : 0, 0.25);
       if (s.target.x !== null && s.target.y !== null) {
         s.cursorState.x = lerp(s.cursorState.x || s.target.x, s.target.x, speed);
         s.cursorState.y = lerp(s.cursorState.y || s.target.y, s.target.y, speed);
@@ -157,29 +180,37 @@ const CrosshairCursor = () => {
         if (cursorRef.current) {
           cursorRef.current.style.left = `${s.cursorState.x}px`;
           cursorRef.current.style.top = `${s.cursorState.y}px`;
-          cursorRef.current.style.width = `${s.cursorState.size}px`;
-          cursorRef.current.style.height = `${s.cursorState.size}px`;
+          cursorRef.current.style.width = `${s.cursorState.size + 2 * s.fireAnim}px`;
+          cursorRef.current.style.height = `${s.cursorState.size + 2 * s.fireAnim}px`;
           cursorRef.current.style.opacity = s.cursorState.opacity;
+          cursorRef.current.style.background = s.fireAnim > 0.2 ? '#ff2d2d' : '#fff';
+          cursorRef.current.style.boxShadow = s.fireAnim > 0.2
+            ? '0 0 10px 2px #ff2d2d, 0 0 20px 4px #ff2d2d44'
+            : '0 0 6px rgba(255, 71, 87, 0.6), 0 0 12px rgba(255, 71, 87, 0.3), inset 0 0.5px 1px rgba(255,255,255,0.3)';
         }
 
         if (verticalLineRef.current) {
           verticalLineRef.current.style.left = `${s.cursorState.x}px`;
           verticalLineRef.current.style.opacity = s.cursorState.opacity * 0.6;
+          verticalLineRef.current.style.transform = `translateX(-50%) scaleY(${1 + 0.5 * s.fireAnim})`;
+          verticalLineRef.current.style.background = s.fireAnim > 0.2
+            ? 'linear-gradient(to bottom, transparent 0%, #ff2d2d 30%, #ff2d2d 70%, transparent 100%)'
+            : 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.4) 15%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.4) 85%, transparent 100%)';
         }
 
         if (horizontalLineRef.current) {
           horizontalLineRef.current.style.top = `${s.cursorState.y}px`;
           horizontalLineRef.current.style.opacity = s.cursorState.opacity * 0.6;
+          horizontalLineRef.current.style.transform = `translateY(-50%) scaleX(${1 + 0.5 * s.fireAnim})`;
+          horizontalLineRef.current.style.background = s.fireAnim > 0.2
+            ? 'linear-gradient(to right, transparent 0%, #ff2d2d 30%, #ff2d2d 70%, transparent 100%)'
+            : 'linear-gradient(to right, transparent 0%, rgba(255,255,255,0.4) 15%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.4) 85%, transparent 100%)';
         }
       }
-
       requestAnimationFrame(animateCursor);
     }
-    
     animateCursor();
-    return () => { 
-      running = false;
-    };
+    return () => { running = false; };
   }, []);
 
   return (
