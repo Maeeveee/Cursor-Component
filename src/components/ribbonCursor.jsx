@@ -5,10 +5,19 @@ const lerp = (a, b, n) => a + (b - a) * n;
 const RibbonCursor = () => {
   const trailRef = useRef([]);
   const canvasRef = useRef(null);
-  const state = useRef({
-    mouse: { x: null, y: null },
-    trail: []
-  });
+    function getRandomColor() {
+      return {
+        h: Math.floor(Math.random() * 360),
+        s: 60 + Math.floor(Math.random() * 30),
+        l: 40 + Math.floor(Math.random() * 30)
+      };
+    }
+    const state = useRef({
+      mouse: { x: null, y: null },
+      trail: [],
+      trailColor: getRandomColor(),
+      targetColor: null
+    });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,6 +40,13 @@ const RibbonCursor = () => {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    // Trail color randomizer on click
+    const handleClick = (e) => {
+      if (isMobile) return;
+      const s = state.current;
+      s.targetColor = getRandomColor();
+    };
+    window.addEventListener('mousedown', handleClick);
 
     const handleMobileHide = () => {
       if (isMobile) {
@@ -44,7 +60,8 @@ const RibbonCursor = () => {
     }
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('mousedown', handleClick);
       if (isMobile) {
         document.removeEventListener("touchstart", handleMobileHide);
         document.removeEventListener("click", handleMobileHide);
@@ -68,9 +85,25 @@ const RibbonCursor = () => {
     
     function animateRibbon() {
       if (!running) return;
-      
       const s = state.current;
-      
+      // Smooth color transition
+      if (s.targetColor) {
+        // Lerp each channel
+        const lerpColor = (a, b, n) => a + (b - a) * n;
+        s.trailColor.h = lerpColor(s.trailColor.h, s.targetColor.h, 0.12);
+        s.trailColor.s = lerpColor(s.trailColor.s, s.targetColor.s, 0.12);
+        s.trailColor.l = lerpColor(s.trailColor.l, s.targetColor.l, 0.12);
+        // If close enough, snap and clear target
+        if (
+          Math.abs(s.trailColor.h - s.targetColor.h) < 1 &&
+          Math.abs(s.trailColor.s - s.targetColor.s) < 1 &&
+          Math.abs(s.trailColor.l - s.targetColor.l) < 1
+        ) {
+          s.trailColor = { ...s.targetColor };
+          s.targetColor = null;
+        }
+      }
+
       if (s.mouse.x !== null && s.mouse.y !== null) {
         s.trail.unshift({
           x: s.mouse.x,
@@ -86,7 +119,6 @@ const RibbonCursor = () => {
       });
 
       let smoothedTrail = [...s.trail];
-      
       for (let pass = 0; pass < 3; pass++) {
         const newTrail = [];
         for (let i = 0; i < smoothedTrail.length; i++) {
@@ -98,13 +130,11 @@ const RibbonCursor = () => {
             const prev = smoothedTrail[i - 1];
             const current = smoothedTrail[i];
             const next = smoothedTrail[i + 1];
-            
             const elasticity = 0.8;
             const avgX = (prev.x + next.x) / 2;
             const avgY = (prev.y + next.y) / 2;
             const smoothX = lerp(current.x, avgX, elasticity);
             const smoothY = lerp(current.y, avgY, elasticity);
-            
             newTrail.push({
               x: smoothX,
               y: smoothY,
@@ -115,7 +145,6 @@ const RibbonCursor = () => {
         }
         smoothedTrail = newTrail;
       }
-
       drawRibbonTrail(ctx, smoothedTrail);
       requestAnimationFrame(animateRibbon);
     }
@@ -139,26 +168,25 @@ const RibbonCursor = () => {
         ctx.quadraticCurveTo(current.x, current.y, controlX, controlY);
       }
       
+      // Use current trail color
+      const s2 = state.current;
+      const { h, s: sat, l } = s2.trailColor;
       for (let i = 0; i < validTrail.length - 1; i++) {
         const current = validTrail[i];
         const next = validTrail[i + 1];
-        
         const age = (Date.now() - current.timestamp) / current.lifetime;
         const indexAge = i / validTrail.length;
         const combinedAge = Math.min(age, indexAge);
-        
         const opacity = Math.max(0.2, 1 - Math.pow(combinedAge, 0.7) * 0.6);
         const baseWidth = 40;
         const width = Math.max(12, (1 - Math.pow(combinedAge, 0.8) * 0.5) * baseWidth);
-
         const gradient = ctx.createRadialGradient(
           current.x, current.y, 0,
           current.x, current.y, width / 2
         );
-        gradient.addColorStop(0, `hsla(220, 70%, 50%, ${opacity})`);
-        gradient.addColorStop(0.7, `hsla(220, 65%, 40%, ${opacity * 0.9})`);
-        gradient.addColorStop(1, `hsla(220, 60%, 30%, ${opacity * 0.7})`);
-        
+        gradient.addColorStop(0, `hsla(${h}, ${sat}%, ${l + 10}%, ${opacity})`);
+        gradient.addColorStop(0.7, `hsla(${h}, ${sat - 5}%, ${l}%, ${opacity * 0.9})`);
+        gradient.addColorStop(1, `hsla(${h}, ${sat - 10}%, ${l - 10}%, ${opacity * 0.7})`);
         ctx.beginPath();
         ctx.moveTo(current.x, current.y);
         if (i < validTrail.length - 2) {
@@ -169,7 +197,6 @@ const RibbonCursor = () => {
         } else {
           ctx.lineTo(next.x, next.y);
         }
-        
         ctx.strokeStyle = gradient;
         ctx.lineWidth = width;
         ctx.lineCap = 'round';
